@@ -35,9 +35,22 @@
 - `drizzle.config.ts` — Drizzle Kit configuration
 - `drizzle/` — Generated migrations
 
-## Design Inspirations
+## Design System
 
-Before building or modifying any UI (pages, components, layouts), **always read the images in `sources/inspiration/`** first. These are design references that define the visual direction of the app. Match the style, spacing, color usage, and layout patterns found in these inspirations. If no inspiration images exist yet, ask the user for direction.
+**`DESIGN.md` at the repo root is the source of truth for all UI work.** Before building or modifying any UI (pages, components, layouts), read it. It defines the token catalog (`{colors.canvas}`, `{typography.display-mega}`, etc.), component specs, and explicit do/don't rules. Tokens are wired into Tailwind via `src/app/globals.css`:
+
+- `bg-canvas`, `bg-canvas-soft`, `bg-surface-card`, `text-ink`, `text-body`, `border-hairline`, `border-hairline-strong` — direct token classes
+- ShadCN semantic classes (`bg-primary`, `bg-card`, `text-foreground`, etc.) are remapped to DESIGN.md tokens, so `<Button>` and `<Card>` already inherit the system
+- Display utilities: `display-mega`, `display-lg`, `display-md`, `display-sm`, `caption-uppercase` — apply at use sites
+- Fonts: CursorGothic for sans (display + body), JetBrains Mono for code, both wired through `--font-sans` / `--font-mono`
+
+Hard rules from DESIGN.md to remember:
+- Cursor Orange (`bg-primary`) is reserved for primary CTAs and brand wordmark — used scarcely
+- Display headings stay at weight 400 with negative tracking, never bold
+- No drop shadows; depth comes from hairlines + cream-on-white contrast
+- Timeline pastels (`bg-timeline-thinking`, `-grep`, `-read`, `-edit`, `-done`) are scoped to in-product agent UI only
+
+If `sources/inspiration/` has images, they are mood references — DESIGN.md still wins on tokens and component specs.
 
 ## Conventions
 
