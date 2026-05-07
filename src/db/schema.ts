@@ -15,3 +15,14 @@ export const users = sqliteTable('users', {
     .notNull()
     .default(sql`(current_timestamp)`),
 });
+
+export const otpCodes = sqliteTable('otp_codes', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  email: text('email').notNull(),
+  codeHash: text('code_hash').notNull(),
+  expiresAt: integer('expires_at', { mode: 'timestamp' }).notNull(),
+  consumedAt: integer('consumed_at', { mode: 'timestamp' }),
+  createdAt: text('created_at')
+    .notNull()
+    .default(sql`(current_timestamp)`),
+});
