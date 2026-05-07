@@ -1,16 +1,24 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import localFont from 'next/font/local';
+import { JetBrains_Mono } from 'next/font/google';
 import { Providers } from '@/components/providers';
 import './globals.css';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
+const cursorGothic = localFont({
+  variable: '--font-sans',
+  display: 'swap',
+  src: [
+    { path: '../../public/fonts/CursorGothic-Regular.woff2', weight: '400', style: 'normal' },
+    { path: '../../public/fonts/CursorGothic-Italic.woff2', weight: '400', style: 'italic' },
+    { path: '../../public/fonts/CursorGothic-Bold.woff2', weight: '700', style: 'normal' },
+    { path: '../../public/fonts/CursorGothic-BoldItalic.woff2', weight: '700', style: 'italic' },
+  ],
 });
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
+const jetbrainsMono = JetBrains_Mono({
+  variable: '--font-mono',
   subsets: ['latin'],
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -25,7 +33,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${cursorGothic.variable} ${jetbrainsMono.variable} antialiased`}>
         <Providers>{children}</Providers>
       </body>
     </html>
