@@ -6,37 +6,37 @@ export default async function Home() {
   const user = await getCurrentUser();
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <main className="flex flex-col items-center gap-8 p-8">
-        <h1 className="text-4xl font-bold tracking-tight">AI Starter Pack</h1>
+    <main className="mx-auto flex min-h-screen max-w-[1200px] flex-col items-center justify-center px-6 py-20">
+      <div className="flex flex-col items-center gap-10 text-center">
+        <h1 className="display-mega text-ink">AI Starter Pack</h1>
 
         {user ? (
-          <div className="flex flex-col items-center gap-4">
-            <p className="text-lg text-muted-foreground">
-              Signed in as <span className="font-medium text-foreground">{user.email}</span>
+          <div className="flex flex-col items-center gap-6">
+            <p className="text-body">
+              Signed in as <span className="text-ink">{user.email}</span>
             </p>
             <SignOutButton />
           </div>
         ) : (
-          <div className="flex flex-col items-center gap-4">
-            <p className="text-lg text-muted-foreground">Get started by signing in.</p>
+          <div className="flex flex-col items-center gap-6">
+            <p className="max-w-prose text-body">Get started by signing in.</p>
             <div className="flex gap-3">
               <Link
-                href="/signin"
-                className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                href="/signup"
+                className="inline-flex h-11 items-center justify-center rounded-lg bg-ink px-5 text-sm font-medium text-canvas transition-colors hover:bg-ink/90"
               >
-                Sign In
+                Sign up
               </Link>
               <Link
-                href="/signup"
-                className="inline-flex h-10 items-center justify-center rounded-md border border-input bg-background px-6 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+                href="/signin"
+                className="inline-flex h-11 items-center justify-center rounded-lg border border-hairline-strong bg-surface-card px-5 text-sm font-medium text-ink transition-colors hover:bg-canvas-soft"
               >
-                Sign Up
+                Sign in
               </Link>
             </div>
           </div>
         )}
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }

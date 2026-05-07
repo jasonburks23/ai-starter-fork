@@ -37,18 +37,20 @@ export default function SignUpPage() {
   });
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-6">
+    <div className="flex min-h-screen items-center justify-center px-6 py-20">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle>Create an account</CardTitle>
-          <CardDescription>
-            {stage === 'form' ? 'We’ll email you a 6-digit code.' : 'Enter the code we just sent.'}
+          <CardTitle className="display-sm font-normal">Create an account</CardTitle>
+          <CardDescription className="text-body">
+            {stage === 'form'
+              ? 'We’ll email you a 6-digit code.'
+              : 'Enter the code we just sent.'}
           </CardDescription>
         </CardHeader>
         <CardContent>
           {stage === 'form' ? (
             <form
-              className="flex flex-col gap-4"
+              className="flex flex-col gap-5"
               onSubmit={(e) => {
                 e.preventDefault();
                 request.mutate();
@@ -87,8 +89,8 @@ export default function SignUpPage() {
           )}
         </CardContent>
         <CardFooter className="text-sm text-muted-foreground">
-          Already have an account?{' '}
-          <Link href="/signin" className="ml-1 font-medium text-foreground hover:underline">
+          Already have an account?
+          <Link href="/signin" className="ml-1 text-ink hover:underline">
             Sign in
           </Link>
         </CardFooter>
