@@ -15,11 +15,11 @@
 
 ## Architecture
 
-- **Framework**: Next.js 15 (App Router, TypeScript, Turbopack)
+- **Framework**: Next.js 16 (App Router, TypeScript, Turbopack)
 - **Styling**: Tailwind CSS v4 + ShadCN UI (new-york style, neutral base)
 - **Database**: Drizzle ORM + Turso (libsql/SQLite)
 - **Storage**: Cloudflare R2 (via AWS SDK v3)
-- **Auth**: WorkOS AuthKit
+- **Auth**: Email OTP via Resend, JWT cookie sessions (`jose`)
 - **AI**: Vercel AI SDK + Anthropic (`@ai-sdk/anthropic`)
 - **Data Fetching**: TanStack Query (`@tanstack/react-query`)
 - **Testing**: Vitest + React Testing Library
@@ -27,9 +27,11 @@
 ## Project Structure
 
 - `src/app/` — Next.js App Router pages and layouts
+- `src/app/api/auth/` — OTP sign-up, sign-in, verify, sign-out routes
+- `src/app/signin/`, `src/app/signup/` — auth pages
+- `src/components/auth/` — `OtpForm`, `SignOutButton`
 - `src/db/` — Drizzle schema (`schema.ts`) and client (`index.ts`)
-- `src/lib/` — Shared utilities (`utils.ts`, `r2.ts`)
-- `src/proxy.ts` — WorkOS auth proxy (Next.js 16 convention, replaces middleware.ts)
+- `src/lib/` — Shared utilities: `auth.ts` (sessions), `otp.ts` (code helpers), `email.ts` (Resend), `r2.ts`, `utils.ts`
 - `drizzle.config.ts` — Drizzle Kit configuration
 - `drizzle/` — Generated migrations
 

@@ -46,25 +46,28 @@ Set these values in `.env.local`:
 - `R2_SECRET_ACCESS_KEY` — R2 API token secret key
 - `R2_BUCKET_NAME` — the name of their R2 bucket
 
-### 2c: WorkOS AuthKit
+### 2c: Auth session secret
 
-Ask the user for their WorkOS credentials. They can create a project at https://workos.com.
+Generate a strong session secret used to sign JWT cookies:
+
+```bash
+openssl rand -base64 32
+```
+
+Set this value in `.env.local`:
+
+- `SESSION_SECRET` — must be at least 32 characters
+
+### 2d: Resend (optional in dev)
+
+In development, OTP codes are printed to the dev server console — the user can leave `RESEND_API_KEY` and `RESEND_FROM_EMAIL` blank and skip this step. For production email delivery, ask the user for their Resend credentials. They can create a project at https://resend.com.
 
 Set these values in `.env.local`:
 
-- `WORKOS_CLIENT_ID` — starts with `client_`
-- `WORKOS_API_KEY` — starts with `sk_test_` or `sk_live_`
-- `WORKOS_COOKIE_PASSWORD` — generate one automatically:
+- `RESEND_API_KEY` — starts with `re_`
+- `RESEND_FROM_EMAIL` — must be a verified sender, e.g. `Auth <noreply@example.com>`
 
-```bash
-openssl rand -base64 24
-```
-
-- `NEXT_PUBLIC_WORKOS_REDIRECT_URI` — default is `http://localhost:3000/callback`. Ask the user if they need a different value.
-
-**Important:** Remind the user to add `http://localhost:3000/callback` as an allowed redirect URI in their WorkOS dashboard.
-
-### 2d: Anthropic
+### 2e: Anthropic
 
 Ask the user for their Anthropic API key. They can get one at https://console.anthropic.com/.
 
@@ -72,13 +75,13 @@ Set this value in `.env.local`:
 
 - `ANTHROPIC_API_KEY` — starts with `sk-ant-`
 
-## Step 3: Push database schema
+## Step 3: Run database migrations
 
 ```bash
-pnpm db:push
+pnpm db:migrate
 ```
 
-This pushes the Drizzle schema (users table) to the Turso database.
+This applies the Drizzle migrations (creates the `users` and `otp_codes` tables) on the Turso database.
 
 ## Step 4: Start the dev server
 

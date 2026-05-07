@@ -8,7 +8,7 @@ A batteries-included Next.js starter template for building AI-powered applicatio
 - **Styling:** Tailwind CSS v4 + ShadCN UI + AI Elements
 - **Database:** Drizzle ORM + Turso (libsql/SQLite)
 - **Storage:** Cloudflare R2
-- **Auth:** WorkOS AuthKit
+- **Auth:** Email OTP (Resend) with JWT cookie sessions
 - **AI:** Vercel AI SDK + Anthropic
 - **Data Fetching:** TanStack Query
 - **Testing:** Vitest + React Testing Library
@@ -16,11 +16,11 @@ A batteries-included Next.js starter template for building AI-powered applicatio
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/) 18+
+- [Node.js](https://nodejs.org/) 22.11+
 - [pnpm](https://pnpm.io/) package manager
 - A [Turso](https://turso.tech/) database
 - A [Cloudflare](https://dash.cloudflare.com/) account with an R2 bucket
-- A [WorkOS](https://workos.com/) account with AuthKit configured
+- A [Resend](https://resend.com/) API key for production email delivery (optional in dev — OTPs print to the console)
 - An [Anthropic](https://console.anthropic.com/) API key
 
 ## Setup
@@ -63,18 +63,22 @@ R2_SECRET_ACCESS_KEY=your-secret-key
 R2_BUCKET_NAME=your-bucket
 ```
 
-#### WorkOS
+#### Auth
 
-Create a project at [workos.com](https://workos.com), then set:
+Generate a session secret (used to sign JWT cookies):
 
 ```
-WORKOS_CLIENT_ID=client_...
-WORKOS_API_KEY=sk_test_...
-WORKOS_COOKIE_PASSWORD=<generate with: openssl rand -base64 24>
-NEXT_PUBLIC_WORKOS_REDIRECT_URI=http://localhost:3000/callback
+SESSION_SECRET=<generate with: openssl rand -base64 32>
 ```
 
-Add `http://localhost:3000/callback` as an allowed redirect URI in your WorkOS dashboard under AuthKit > Redirects.
+#### Resend (optional in dev)
+
+In development, OTPs are printed to the dev server console — leave the Resend variables blank. For production, create an API key at [resend.com](https://resend.com) and verify a sending domain, then set:
+
+```
+RESEND_API_KEY=re_...
+RESEND_FROM_EMAIL=Auth <noreply@yourdomain.com>
+```
 
 #### Anthropic
 
@@ -84,10 +88,10 @@ Get an API key from the [Anthropic Console](https://console.anthropic.com/), the
 ANTHROPIC_API_KEY=sk-ant-...
 ```
 
-### 3. Push the database schema
+### 3. Run database migrations
 
 ```bash
-pnpm db:push
+pnpm db:migrate
 ```
 
 ### 4. Start the dev server
@@ -120,22 +124,30 @@ Open [http://localhost:3000](http://localhost:3000) — you should see the landi
 ```
 src/
 ├── app/                  # Next.js App Router pages and layouts
-│   ├── api/chat/         # AI chat API route (streaming)
-│   ├── callback/         # WorkOS auth callback route
+│   ├── api/
+│   │   ├── auth/         # OTP sign-up, sign-in, verify, sign-out routes
+│   │   └── chat/         # AI chat API route (streaming)
+│   ├── signin/           # Sign-in page (email → OTP)
+│   ├── signup/           # Sign-up page (name + email → OTP)
 │   ├── globals.css       # Tailwind + ShadCN theme
 │   ├── layout.tsx        # Root layout
 │   └── page.tsx          # Home page
 ├── components/
+│   ├── auth/             # OtpForm, SignOutButton
+│   ├── ui/               # ShadCN primitives
 │   └── providers.tsx     # Client providers (TanStack Query)
 ├── db/
 │   ├── index.ts          # Drizzle database client
-│   └── schema.ts         # Database schema (users table)
+│   └── schema.ts         # Database schema (users, otp_codes)
 ├── lib/
+│   ├── auth.ts           # Sessions (JWT cookies) + getCurrentUser
+│   ├── email.ts          # Resend wrapper (logs OTP in dev)
+│   ├── otp.ts            # OTP generation/hash/verify
 │   ├── r2.ts             # Cloudflare R2 helpers
 │   └── utils.ts          # ShadCN utility (cn)
-├── test/
-│   └── setup.ts          # Vitest setup (jest-dom matchers)
-└── proxy.ts              # WorkOS auth proxy
+└── test/
+    ├── setup.ts          # Vitest setup (jest-dom + jsdom polyfills)
+    └── utils.tsx         # Test helpers (QueryClient wrapper)
 ```
 
 ## Adding Components
